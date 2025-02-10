@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: vnebe
+      changes:
+      - createTable:
+          tableName: user
+          columns:
+            - column:
+                name: iduser
+                type: INT
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: nickname
+                type: varchar(100)
+            - column:
+                name: password
+                type: varchar(100)
+                constraints:
+                  unique: true
+                  nullable: false
+            - column:
+                name: role
+                type: varchar(100)
+                constraints:
+                  nullable: false
+
+  - changeSet:
+      id: 2
+      author: vnebe
+      comment: "Create users"
+      changes:
+        - insert:
+            tableName: user
+            columns:
+              - column:
+                  name: nickname
+                  value: "admin"
+              - column:
+                  name: password
+                  value: "admin"
+              - column:
+                  name: role
+                  value: "ADMIN"
+        - insert:
+            tableName: user
+            columns:
+              - column:
+                  name: nickname
+                  value: "guest"
+              - column:
+                  name: password
+                  value: "guest"
+              - column:
+                  name: role
+                  value: "USER"
