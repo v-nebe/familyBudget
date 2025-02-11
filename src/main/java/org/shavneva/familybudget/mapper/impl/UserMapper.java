@@ -3,10 +3,10 @@ package org.shavneva.familybudget.mapper.impl;
 import org.shavneva.familybudget.dto.UserDTO;
 import org.shavneva.familybudget.entity.User;
 import org.shavneva.familybudget.mapper.IMapper;
-import org.springframework.stereotype.Component;
+
 import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class UserMapper implements IMapper<User, UserDTO> {
 
     @Override
@@ -15,7 +15,7 @@ public class UserMapper implements IMapper<User, UserDTO> {
             return null;
         }
         UserDTO userDTO = new UserDTO();
-        userDTO.setIdUser(entity.getIdUser());
+        userDTO.setIdUser(entity.getId());
         userDTO.setNickname(entity.getNickname());
         userDTO.setPassword(entity.getPassword());
         userDTO.setRole(entity.getRole());
@@ -29,7 +29,7 @@ public class UserMapper implements IMapper<User, UserDTO> {
             return null;
         }
         User user = new User();
-        user.setIdUser(userDTO.getIdUser());
+        user.setId(userDTO.getIdUser());
         user.setNickname(userDTO.getNickname());
         user.setPassword(userDTO.getPassword());
         user.setRole(userDTO.getRole());

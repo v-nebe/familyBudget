@@ -1,5 +1,6 @@
 package org.shavneva.familybudget.entity;
 
+
 public abstract class BaseEntity {
     private Integer id;
 

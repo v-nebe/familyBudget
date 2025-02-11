@@ -1,14 +1,14 @@
 package org.shavneva.familybudget.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
 @Builder
 @Data
 @NoArgsConstructor
@@ -22,7 +22,7 @@ public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "iduser")
-    private int idUser;
+    private int id;
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "password")
