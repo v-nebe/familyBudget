@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 @AllArgsConstructor
-public class BaseService<T extends BaseEntity, ID> implements ICrudService<T> {
+public abstract  class BaseService<T extends BaseEntity, ID> implements ICrudService<T> {
 
     private final JpaRepository<T, Integer> repository;
 
