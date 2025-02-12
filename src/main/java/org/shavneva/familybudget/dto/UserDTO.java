@@ -11,7 +11,7 @@ import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBl
 @Setter
 public class UserDTO {
 
-    private int idUser;
+    private int iduser;
     @NotBlank
     private String nickname;
     @NotBlank

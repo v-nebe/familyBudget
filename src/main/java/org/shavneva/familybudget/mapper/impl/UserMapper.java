@@ -15,7 +15,7 @@ public class UserMapper implements IMapper<User, UserDTO> {
             return null;
         }
         UserDTO userDTO = new UserDTO();
-        userDTO.setIdUser(entity.getId());
+        userDTO.setIduser(entity.getIduser());
         userDTO.setNickname(entity.getNickname());
         userDTO.setPassword(entity.getPassword());
         userDTO.setRole(entity.getRole());
@@ -29,7 +29,7 @@ public class UserMapper implements IMapper<User, UserDTO> {
             return null;
         }
         User user = new User();
-        user.setId(userDTO.getIdUser());
+        user.setIduser(userDTO.getIduser());
         user.setNickname(userDTO.getNickname());
         user.setPassword(userDTO.getPassword());
         user.setRole(userDTO.getRole());

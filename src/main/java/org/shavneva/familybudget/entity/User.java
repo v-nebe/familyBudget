@@ -22,7 +22,7 @@ public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "iduser")
-    private int id;
+    private int iduser;
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "password")

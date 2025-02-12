@@ -25,8 +25,9 @@ public class UserService extends BaseService<User, Integer> {
     @Override
     public User update(User updatedEntity) {
         // Получаем оригинальную сущность из базы данных
-        User existingEntity = userRepository.findById(updatedEntity.getId()).orElseThrow(
-                () -> new IllegalArgumentException("User not found with id: " + updatedEntity.getId())
+        System.out.println(updatedEntity);
+        User existingEntity = userRepository.findById(updatedEntity.getIduser()).orElseThrow(
+                () -> new IllegalArgumentException("User not found with id: " + updatedEntity.getIduser())
         );
 
         // Обновляем только измененные поля

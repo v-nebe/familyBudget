@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 public interface ICrudController<DTO> {
-    @PutMapping("/create")
+    @PostMapping("/create")
     DTO create(@Valid @RequestBody DTO dto);
     @GetMapping("/getAll")
     List<DTO> read();
