@@ -24,13 +24,10 @@ public class UserService extends BaseService<User, Integer> {
 
     @Override
     public User update(User updatedEntity) {
-        // Получаем оригинальную сущность из базы данных
-        System.out.println(updatedEntity);
         User existingEntity = userRepository.findById(updatedEntity.getIduser()).orElseThrow(
                 () -> new IllegalArgumentException("User not found with id: " + updatedEntity.getIduser())
         );
 
-        // Обновляем только измененные поля
         if (updatedEntity.getNickname() != null) {
             existingEntity.setNickname(updatedEntity.getNickname());
         }
@@ -41,15 +38,7 @@ public class UserService extends BaseService<User, Integer> {
             existingEntity.setRole(updatedEntity.getRole());
         }
 
-        // Сохраняем обновленную сущность
         return userRepository.save(existingEntity);
     }
 
-    public User findByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
-    }
-
-    public void save(User user) {
-        userRepository.save(user);
-    }
 }

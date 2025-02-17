@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController extends BaseController<User, UserDTO> {
 
     private final UserService userService;
@@ -26,12 +27,15 @@ public class UserController extends BaseController<User, UserDTO> {
 
     @Override
     public UserDTO create(UserDTO userDto) {
+        if (userDto.getRole() == null || userDto.getRole().isEmpty()) {
+            userDto.setRole("ROLE_USER");
+        }
         return super.create(userDto);
     }
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    @PostFilter("hasRole('ADMIN') or filterObject.nickname == authentication.name")
+    @PostFilter("hasRole('ROLE_ADMIN') or filterObject.nickname == authentication.name")
     public List<UserDTO> read() {
         return super.read();
     }
