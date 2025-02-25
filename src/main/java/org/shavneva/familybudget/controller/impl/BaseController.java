@@ -21,6 +21,7 @@ public class BaseController <T, DTO> implements ICrudController<DTO> {
     @Override
     public DTO create(DTO dto) {
         T entity = mapper.mapToEntity(dto);
+        System.out.println(entity);
         T createdEntity = service.create(entity);
         return mapper.mapToDTO(createdEntity);
     }
