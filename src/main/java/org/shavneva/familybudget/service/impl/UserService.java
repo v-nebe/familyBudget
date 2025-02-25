@@ -1,44 +1,56 @@
 package org.shavneva.familybudget.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.shavneva.familybudget.entity.User;
+import org.shavneva.familybudget.exception.ResourceNotFoundException;
 import org.shavneva.familybudget.repository.UserRepository;
+import org.shavneva.familybudget.service.ICrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class UserService extends BaseService<User, Integer> {
+@RequiredArgsConstructor
+public class UserService implements ICrudService<User> {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        super(userRepository);
-        this.userRepository = userRepository;
-    }
-
     @Override
     public User create(User user) {
-        User savedUser = userRepository.save(user);
-        return savedUser;
+        return userRepository.save(user);
     }
 
     @Override
-    public User update(User updatedEntity) {
-        User existingEntity = userRepository.findById(updatedEntity.getIduser()).orElseThrow(
-                () -> new IllegalArgumentException("User not found with id: " + updatedEntity.getIduser())
-        );
-
-        if (updatedEntity.getNickname() != null) {
-            existingEntity.setNickname(updatedEntity.getNickname());
-        }
-        if (updatedEntity.getPassword() != null) {
-            existingEntity.setPassword(updatedEntity.getPassword());
-        }
-        if (updatedEntity.getRole() != null && !updatedEntity.getRole().isEmpty()) {
-            existingEntity.setRole(updatedEntity.getRole());
-        }
-
-        return userRepository.save(existingEntity);
+    public List<User> read() {
+        return userRepository.findAll();
     }
 
+    @Override
+    public User getById(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    }
+
+    @Override
+    public User update(User updatedUser) {
+        User existingUser = getById(updatedUser.getIduser());
+
+        if (updatedUser.getNickname() != null) {
+            existingUser.setNickname(updatedUser.getNickname());
+        }
+        if (updatedUser.getPassword() != null) {
+            existingUser.setPassword(updatedUser.getPassword());
+        }
+        if (updatedUser.getRole() != null && !updatedUser.getRole().isEmpty()) {
+            existingUser.setRole(updatedUser.getRole());
+        }
+
+        return userRepository.save(existingUser);
+    }
+
+    @Override
+    public void delete(int id) {
+        userRepository.deleteById(id);
+    }
 }
