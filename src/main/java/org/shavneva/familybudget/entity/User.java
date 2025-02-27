@@ -23,11 +23,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "iduser")
     private int iduser;
-    @Column(name = "nickname")
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private String role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 }
