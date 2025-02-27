@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: vnebe
+      changes:
+        - createTable:
+            tableName: transaction
+            columns:
+              - column:
+                  name: idtransaction
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: iduser
+                  type: INT
+                  constraints:
+                    foreignKeyName: "fk_transaction_user"
+                    references: "user(iduser)"
+                    nullable: false
+              - column:
+                  name: idcategory
+                  type: INT
+                  constraints:
+                    foreignKeyName: "fk_transaction_category"
+                    references: "category(idcategory)"
+                    nullable: false
+              - column:
+                  name: currency
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: varchar(100)
+              - column:
+                  name: date
+                  type: DATE
+                  constraints:
+                    nullable: false
