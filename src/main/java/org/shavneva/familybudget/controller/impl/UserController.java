@@ -5,6 +5,7 @@ import org.shavneva.familybudget.dto.*;
 import org.shavneva.familybudget.entity.*;
 import org.shavneva.familybudget.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:5173")
 public class UserController extends BaseController<User, UserDTO> {
 
+    private final UserService userService;
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper, UserService userService1) {
         super(userService, userMapper);
+        this.userService = userService1;
     }
 
     @Override
@@ -42,15 +44,25 @@ public class UserController extends BaseController<User, UserDTO> {
         return super.getById(id);
     }
 
-    @Override
-    @PreAuthorize("authentication.principal.username == #newDTO.nickname or hasRole('ROLE_ADMIN')")
-    public UserDTO update(UserDTO newDTO) {
-        return super.update(newDTO);
+    @PutMapping("/update/{oldNickname}")
+    @PreAuthorize("authentication.principal.username == #oldNickname or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<UserDTO> update(@PathVariable String oldNickname, @RequestBody UserDTO updatedUserDTO) {
+        UserMapper userMapper = new UserMapper();
+        User updatedUser = userService.updateByNickname(oldNickname, userMapper.mapToEntity(updatedUserDTO));
+        return ResponseEntity.ok(userMapper.mapToDTO(updatedUser));
     }
 
     @Override
     @PreAuthorize("authentication.principal.iduser == #id or hasRole('ROLE_ADMIN')")
     public void delete(int id) {
         super.delete(id);
+    }
+
+
+    @GetMapping("/nickname/{nickname}")
+    @PreAuthorize("authentication.principal.username == #nickname or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<UserDTO> getByNickname(@PathVariable String nickname) {
+        UserDTO userDTO = userService.getByNickname(nickname);
+        return  ResponseEntity.ok(userDTO);
     }
 }

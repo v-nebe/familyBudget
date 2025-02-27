@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/category")
-@CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController extends BaseController<Category, CategoryDTO>{
 
     @Autowired
@@ -40,7 +39,6 @@ public class CategoryController extends BaseController<Category, CategoryDTO>{
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
     public void delete(int id) {
         super.delete(id);
     }
