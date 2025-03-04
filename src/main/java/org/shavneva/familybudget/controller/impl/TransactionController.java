@@ -30,7 +30,6 @@ public class TransactionController extends BaseController<Transaction, Transacti
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
     public TransactionDTO create(TransactionDTO transactionDTO){
-        System.out.println(transactionDTO);
         return super.create(transactionDTO);
     }
 
@@ -41,7 +40,7 @@ public class TransactionController extends BaseController<Transaction, Transacti
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
     public TransactionDTO update(TransactionDTO transactionDTO){
         return super.update(transactionDTO);
     }

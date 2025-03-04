@@ -8,7 +8,6 @@ import org.shavneva.familybudget.exception.ResourceNotFoundException;
 import org.shavneva.familybudget.mapper.impl.UserMapper;
 import org.shavneva.familybudget.repository.UserRepository;
 import org.shavneva.familybudget.service.ICrudService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,15 +28,17 @@ public class UserService implements ICrudService<User> {
         return userRepository.findAll();
     }
 
-    @Override
-    public User getById(int id) {
-        return userRepository.findById(id)
+    public UserDTO getById(int id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        UserMapper userMapper = new UserMapper();
+        return userMapper.mapToDTO(user);
     }
 
     @Override
     public User update(User updatedUser) {
-        User existingUser = getById(updatedUser.getIduser());
+        UserMapper userMapper = new UserMapper();
+        User existingUser = userMapper.mapToEntity(getById(updatedUser.getIduser()));
 
         if (updatedUser.getNickname() != null) {
             existingUser.setNickname(updatedUser.getNickname());
@@ -74,6 +75,7 @@ public class UserService implements ICrudService<User> {
     public void delete(int id) {
         userRepository.deleteById(id);
     }
+
 
     public UserDTO getByNickname(String nickname){
         User user = userRepository.findByNickname(nickname)
