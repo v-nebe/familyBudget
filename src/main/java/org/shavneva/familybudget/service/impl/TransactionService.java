@@ -25,7 +25,7 @@ public class TransactionService implements ICrudService<Transaction> {
         return transactionRepository.findAll();
     }
 
-    @Override
+
     public Transaction getById(int id) {
         return transactionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id:" + id));

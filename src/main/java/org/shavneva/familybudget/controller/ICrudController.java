@@ -10,8 +10,6 @@ public interface ICrudController<DTO> {
     DTO create(@Valid @RequestBody DTO dto);
     @GetMapping("/getAll")
     List<DTO> read();
-    @GetMapping("/get/{id}")
-    DTO getById(@Valid @PathVariable int id);
     @PutMapping("/update")
     DTO update(@Valid @RequestBody DTO newDTO);
     @DeleteMapping("/delete/{id}")

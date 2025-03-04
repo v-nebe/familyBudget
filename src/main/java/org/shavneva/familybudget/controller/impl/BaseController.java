@@ -32,11 +32,6 @@ public class BaseController <T, DTO> implements ICrudController<DTO> {
     }
 
     @Override
-    public DTO getById(int id) {
-        return mapper.mapToDTO(service.getById(id));
-    }
-
-    @Override
     public DTO update(DTO newDTO) {
         T entity = mapper.mapToEntity(newDTO);
         service.update(entity);

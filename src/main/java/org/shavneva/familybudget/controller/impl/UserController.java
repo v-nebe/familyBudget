@@ -1,5 +1,6 @@
 package org.shavneva.familybudget.controller.impl;
 
+import jakarta.validation.Valid;
 import org.shavneva.familybudget.mapper.impl.*;
 import org.shavneva.familybudget.dto.*;
 import org.shavneva.familybudget.entity.*;
@@ -38,10 +39,10 @@ public class UserController extends BaseController<User, UserDTO> {
         return super.read();
     }
 
-    @Override
+    @GetMapping("/get/{id}")
     @PreAuthorize("authentication.principal.iduser == #id or hasRole('ROLE_ADMIN')")
-    public UserDTO getById(int id) {
-        return super.getById(id);
+    public UserDTO getById(@Valid @PathVariable int id) {
+        return userService.getById(id);
     }
 
     @PutMapping("/update/{oldNickname}")

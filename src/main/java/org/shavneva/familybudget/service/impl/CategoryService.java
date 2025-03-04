@@ -28,7 +28,6 @@ public class CategoryService implements ICrudService<Category> {
         return categoryRepository.findAll();
     }
 
-    @Override
     public Category getById(int id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Категория не найдена с id: " + id));
