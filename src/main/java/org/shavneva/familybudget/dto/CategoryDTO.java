@@ -13,4 +13,7 @@ public class CategoryDTO {
     private int idcategory;
     @NotBlank
     private String categoryname;
+    @NotBlank
+    private String type;
+
 }

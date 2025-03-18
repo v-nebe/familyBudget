@@ -19,6 +19,11 @@ databaseChangeLog:
                   constraints:
                     unique: true
                     nullable: false
+              - column:
+                  name: type
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: 2
@@ -30,6 +35,9 @@ databaseChangeLog:
             columns:
               - column:
                   name: categoryname
+                  value: "ЗП"
+              - column:
+                  name: type
                   value: "Доход"
         - insert:
             tableName: category
@@ -37,3 +45,6 @@ databaseChangeLog:
               - column:
                   name: categoryname
                   value: "Магазин"
+              - column:
+                  name: type
+                  value: "Расход"

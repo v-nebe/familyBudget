@@ -2,8 +2,10 @@ package org.shavneva.familybudget.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.Transaction;
+import org.shavneva.familybudget.entity.User;
 import org.shavneva.familybudget.exception.ResourceNotFoundException;
 import org.shavneva.familybudget.repository.TransactionRepository;
+import org.shavneva.familybudget.repository.UserRepository;
 import org.shavneva.familybudget.service.ICrudService;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.List;
 public class TransactionService implements ICrudService<Transaction> {
 
     private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
+
     @Override
     public Transaction create(Transaction newTransaction) {
         System.out.println(newTransaction);
@@ -56,5 +60,12 @@ public class TransactionService implements ICrudService<Transaction> {
     @Override
     public void delete(int id) {
         transactionRepository.deleteById(id);
+    }
+
+    public List<Transaction> getTransactionsByUser(String nickname, String date) {
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
+        return transactionRepository.findByUserAndMonth(user.getIduser(), date);
     }
 }

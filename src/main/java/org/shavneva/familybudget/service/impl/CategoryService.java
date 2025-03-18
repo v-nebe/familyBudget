@@ -40,6 +40,9 @@ public class CategoryService implements ICrudService<Category> {
         if (updatedCategory.getCategoryname() != null && !updatedCategory.getCategoryname().isEmpty()) {
             existingCategory.setCategoryname(updatedCategory.getCategoryname());
         }
+        if(updatedCategory.getType() != null && !updatedCategory.getType().isEmpty()){
+            existingCategory.setType(updatedCategory.getType());
+        }
 
         return categoryRepository.save(existingCategory);
     }
