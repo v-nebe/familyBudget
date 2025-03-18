@@ -20,6 +20,8 @@ public class Category{
     private int idcategory;
     @Column(name = "categoryname", nullable = false, unique = true)
     private String categoryname;
+    @Column(name = "type", nullable = false)
+    private String type;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Transaction> transactions;

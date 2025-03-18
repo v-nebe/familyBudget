@@ -15,6 +15,7 @@ public class CategoryMapper  implements IMapper<Category, CategoryDTO> {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setIdcategory(entity.getIdcategory());
         categoryDTO.setCategoryname(entity.getCategoryname());
+        categoryDTO.setType(entity.getType());
 
         return  categoryDTO;
     }
@@ -27,6 +28,7 @@ public class CategoryMapper  implements IMapper<Category, CategoryDTO> {
         Category category = new Category();
         category.setIdcategory(categoryDTO.getIdcategory());
         category.setCategoryname(categoryDTO.getCategoryname());
+        category.setType(categoryDTO.getType());
 
         return category;
 

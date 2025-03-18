@@ -1,6 +1,5 @@
 package org.shavneva.familybudget.controller;
 
-import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.Transaction;
 import org.shavneva.familybudget.service.TableService;
@@ -8,12 +7,9 @@ import org.shavneva.familybudget.service.impl.TransactionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -24,8 +20,10 @@ public class TableController {
     private final TransactionService transactionService;
 
     @GetMapping("/download")
-    public ResponseEntity<byte[]> downloadWordFile(){
-        List<Transaction> transactions = transactionService.read();
+    public ResponseEntity<byte[]> downloadWordFile(@RequestParam String nickname, @RequestParam String date){
+
+        List<Transaction> transactions = transactionService.getTransactionsByUser(nickname, date);
+
         byte[] wordFile = tableService.generateWordFile(transactions);
 
         return ResponseEntity.ok()
