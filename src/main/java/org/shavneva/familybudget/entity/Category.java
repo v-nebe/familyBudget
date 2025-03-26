@@ -12,7 +12,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "category")
+@Table(name = "category",
+        uniqueConstraints = { @UniqueConstraint(columnNames = "categoryname") }
+    )
 public class Category{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

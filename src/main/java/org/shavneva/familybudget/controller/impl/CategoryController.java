@@ -21,13 +21,13 @@ public class CategoryController extends BaseController<Category, CategoryDTO>{
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public CategoryDTO create(CategoryDTO categoryDTO) {
         return super.create(categoryDTO);
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public List<CategoryDTO> read() {
         return super.read();
     }
@@ -39,6 +39,7 @@ public class CategoryController extends BaseController<Category, CategoryDTO>{
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(int id) {
         super.delete(id);
     }

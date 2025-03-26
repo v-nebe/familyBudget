@@ -1,6 +1,8 @@
 package org.shavneva.familybudget.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.Date;
@@ -30,6 +32,7 @@ public class Transaction{
 
     @Column(name="currency", nullable = false)
     private String currency;
+    @Pattern(regexp = "^[0-9]+$")
     @Column(name="amount", nullable = false)
     public String amount;
     @Column(name="date", nullable = false)
