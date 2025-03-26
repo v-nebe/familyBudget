@@ -1,9 +1,11 @@
 package org.shavneva.familybudget.controller.impl;
 
 import jakarta.validation.Valid;
+import org.shavneva.familybudget.mapper.IMapper;
 import org.shavneva.familybudget.mapper.impl.*;
 import org.shavneva.familybudget.dto.*;
 import org.shavneva.familybudget.entity.*;
+import org.shavneva.familybudget.service.ICrudService;
 import org.shavneva.familybudget.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +14,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController<User, UserDTO> {
 
     private final UserService userService;
-    @Autowired
-    public UserController(UserService userService, UserMapper userMapper, UserService userService1) {
-        super(userService, userMapper);
-        this.userService = userService1;
+    private final UserMapper userMapper;
+
+    public UserController(ICrudService<User> service, IMapper<User, UserDTO> mapper, UserService userService, UserMapper userMapper) {
+        super(service, mapper);
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
+
 
     @Override
     public UserDTO create(UserDTO userDto) {
@@ -33,16 +39,10 @@ public class UserController extends BaseController<User, UserDTO> {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     @PostFilter("hasRole('ROLE_ADMIN') or filterObject.nickname == authentication.principal.username")
     public List<UserDTO> read() {
         return super.read();
-    }
-
-    @GetMapping("/get/{id}")
-    @PreAuthorize("authentication.principal.iduser == #id or hasRole('ROLE_ADMIN')")
-    public UserDTO getById(@Valid @PathVariable int id) {
-        return userService.getById(id);
     }
 
     @PutMapping("/update/{oldNickname}")
@@ -59,11 +59,11 @@ public class UserController extends BaseController<User, UserDTO> {
         super.delete(id);
     }
 
-
-    @GetMapping("/nickname/{nickname}")
-    @PreAuthorize("authentication.principal.username == #nickname or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> getByNickname(@PathVariable String nickname) {
-        UserDTO userDTO = userService.getByNickname(nickname);
-        return  ResponseEntity.ok(userDTO);
+    @GetMapping("/get/user")
+    @PreAuthorize("authentication.principal.iduser == #id or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<UserDTO> getUser(@RequestParam Map<String, String> filters) {
+        User user = userService.getUser(filters);
+        return ResponseEntity.ok(userMapper.mapToDTO(user));
     }
+    
 }

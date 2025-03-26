@@ -1,31 +1,22 @@
-package org.shavneva.familybudget.service;
+package org.shavneva.familybudget.service.impl;
 
-import lombok.AllArgsConstructor;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJcTable;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJcTable;
 import org.shavneva.familybudget.entity.Transaction;
-
-import org.shavneva.familybudget.service.impl.TransactionService;
+import org.shavneva.familybudget.service.ReportGenerator;
 import org.springframework.stereotype.Service;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
-public class TableService {
-
-    private final TransactionService transactionService;
-
-    public byte[] generateWordFileForCurrentUser(String username, String date) {
-        List<Transaction> userTransactions = transactionService.getTransactionsByUser(username, date);
-        return generateWordFile(userTransactions);
-    }
-
-    public byte[] generateWordFile(List<Transaction> transactions){
+public class WordGenerator implements ReportGenerator {
+    @Override
+    public byte[] generateReport(List<Transaction> transactions) {
         try (XWPFDocument document = new XWPFDocument();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             XWPFParagraph title = document.createParagraph();

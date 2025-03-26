@@ -28,25 +28,25 @@ public class TransactionController extends BaseController<Transaction, Transacti
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public TransactionDTO create(TransactionDTO transactionDTO){
         return super.create(transactionDTO);
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public List<TransactionDTO> read(){
         return super.read();
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public TransactionDTO update(TransactionDTO transactionDTO){
         return super.update(transactionDTO);
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')or hasRole('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public void delete(int id){
         super.delete(id);
     }
