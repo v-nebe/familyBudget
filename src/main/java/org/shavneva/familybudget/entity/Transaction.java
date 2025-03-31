@@ -32,10 +32,10 @@ public class Transaction{
 
     @Column(name="currency", nullable = false)
     private String currency;
-    @Pattern(regexp = "^[0-9]+$")
+    @Pattern(regexp = "^-?\\d+(?:[.]\\d+)?$")
     @Column(name="amount", nullable = false)
-    public String amount;
+    private String amount;
     @Column(name="date", nullable = false)
     @Temporal(TemporalType.DATE)
-    public Date date;
+    private Date date;
 }
