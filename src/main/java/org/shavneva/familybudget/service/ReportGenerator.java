@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReportGenerator {
-    byte[] generateReport(List<Transaction> transactionList, Map<String, Integer> balances);
+    byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances);
 }

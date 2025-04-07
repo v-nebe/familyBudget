@@ -38,4 +38,9 @@ public class Transaction{
     @Column(name="date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date date;
+
+    public Transaction(String currency, String amount) {
+        this.currency = currency;
+        this.amount = amount;
+    }
 }

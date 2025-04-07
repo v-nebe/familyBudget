@@ -18,9 +18,9 @@ public class ReportsService {
     private final WordGenerator wordGenerator;
     private final BalanceService balanceService;
 
-    public byte[] generateWordReportForUser(String username, String date) {
+    public byte[] generateWordReportForUser(String username, String date, String currency) {
         List<Transaction> transactions = transactionService.getTransactionsByUser(username, date);
-        Map<String, Integer> balances = balanceService.CalculateBalances(transactions);
+        Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
         return wordGenerator.generateReport(transactions, balances);
     }
 

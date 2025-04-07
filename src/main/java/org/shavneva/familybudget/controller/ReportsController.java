@@ -18,9 +18,10 @@ public class ReportsController {
     private final ReportsService reportsService;
 
     @GetMapping("/download")
-    public ResponseEntity<byte[]> downloadWordFile(@RequestParam String nickname, @RequestParam String date){
+    public ResponseEntity<byte[]> downloadWordFile(@RequestParam String nickname, @RequestParam String date,
+                                                   @RequestParam String currency){
 
-        byte[] reportData = reportsService.generateWordReportForUser(nickname, date);
+        byte[] reportData = reportsService.generateWordReportForUser(nickname, date, currency);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = transactions.docx")
