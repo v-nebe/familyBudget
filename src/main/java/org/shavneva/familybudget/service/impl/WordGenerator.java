@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 public class WordGenerator implements ReportGenerator {
     @Override
-    public byte[] generateReport(List<Transaction> transactions, Map<String, Integer> balances) {
+    public byte[] generateReport(List<Transaction> transactions, Map<String, Double> balances) {
         if (transactions.isEmpty()) {
             throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
         }
@@ -76,7 +76,7 @@ public class WordGenerator implements ReportGenerator {
                 }
             }
 
-            for (Map.Entry<String, Integer> entry : balances.entrySet()) {
+            for (Map.Entry<String, Double> entry : balances.entrySet()) {
                 XWPFTableRow balanceRow = table.createRow();
                 setCellText(balanceRow.getCell(0), "Конечный баланс", 13, "Times New Roman");
                 setCellText(balanceRow.getCell(1), String.valueOf(entry.getValue()), 13, "Times New Roman"); // Сумма
