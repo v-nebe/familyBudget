@@ -93,4 +93,9 @@ public class UserService implements ICrudService<User> {
         throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректные фильтры");
    }
 
+   public boolean authenticated(String nickname, String password){
+       return nickname != null && password != null &&
+               userRepository.existsUserByNicknameAndPassword(nickname, password);
+   }
+
 }
