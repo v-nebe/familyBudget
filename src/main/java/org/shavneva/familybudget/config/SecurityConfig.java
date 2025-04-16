@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/user/create").anonymous()
                         .requestMatchers("/api/**").authenticated()
-                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/user/login").permitAll()
                         .requestMatchers("/**").permitAll()
                 )
                 .httpBasic(Customizer.withDefaults());

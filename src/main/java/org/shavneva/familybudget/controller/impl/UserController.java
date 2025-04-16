@@ -65,5 +65,16 @@ public class UserController extends BaseController<User, UserDTO> {
         User user = userService.getUser(filters);
         return ResponseEntity.ok(userMapper.mapToDTO(user));
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody User user){
+
+        boolean authenticated = userService.authenticated(user.getNickname(), user.getPassword());
+
+        if(authenticated){
+            return ResponseEntity.ok("Login successful");
+        }
+        return ResponseEntity.status(401).body("Unauthorized");
+    }
     
 }
