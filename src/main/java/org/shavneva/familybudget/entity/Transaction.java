@@ -15,6 +15,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Table(name = "transaction")
+@ToString(exclude = {"user", "category"})
 public class Transaction{
 
     @Id
@@ -26,7 +27,7 @@ public class Transaction{
     @JoinColumn(name = "iduser", nullable = false, foreignKey = @ForeignKey(name = "fk_transaction_user"))
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idcategory", nullable = false, foreignKey = @ForeignKey(name = "fk_transaction_category"))
     private Category category;
 

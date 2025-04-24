@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface  TransactionRepository extends JpaRepository<Transaction, Integer> {
 
-    @Query("SELECT t FROM Transaction t WHERE t.user.iduser = :userId AND FUNCTION('DATE_FORMAT', t.date, '%Y-%m') = :yearMonth")
+    @Query("SELECT t FROM Transaction t JOIN FETCH t.category WHERE t.user.iduser = :userId AND DATE_FORMAT(t.date, '%Y-%m')  = :yearMonth")
     List<Transaction> findByUserAndMonth(@Param("userId") Integer userId, @Param("yearMonth") String yearMonth);
 
 }

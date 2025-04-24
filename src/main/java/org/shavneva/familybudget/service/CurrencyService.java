@@ -23,8 +23,7 @@ public class CurrencyService {
                 JSONObject jsonObject = new JSONObject(response);
                 rates.put(currency, jsonObject.getDouble("Cur_OfficialRate"));
             } catch (Exception e) {
-                e.printStackTrace();
-                rates.put(currency, 0.0);
+                throw new RuntimeException("Ошибка при получении курса валюты " + currency, e);
             }
         }
 

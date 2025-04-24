@@ -17,15 +17,39 @@ import java.util.List;
 public class ReportsController {
     private final ReportsService reportsService;
 
-    @GetMapping("/download")
-    public ResponseEntity<byte[]> downloadWordFile(@RequestParam String nickname, @RequestParam String date,
-                                                   @RequestParam String currency){
+    @GetMapping(value = "/download", produces = {
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    })
+    public ResponseEntity<byte[]> downloadWordFile(@RequestParam String nickname,
+                                                   @RequestParam String date,
+                                                   @RequestParam String currency,
+                                                   @RequestHeader("Accept") String acceptHeader){
 
-        byte[] reportData = reportsService.generateWordReportForUser(nickname, date, currency);
+        byte[] reportData = new byte[0];
+        String filename = "";
+        MediaType mediaType = null;
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = transactions.docx")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        if (acceptHeader.contains("application/pdf")){
+            reportData = reportsService.generatePdfReportForUser(nickname, date, currency);
+            filename = "report.xlsx";
+            mediaType = MediaType.APPLICATION_PDF;
+
+        } else if (acceptHeader.contains("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            reportData = reportsService.generateExcelReportForUser(nickname, date, currency);
+            filename = "report.docx";
+            mediaType = MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+        } else {
+            reportData = reportsService.generateWordReportForUser(nickname, date, currency);
+            filename = "report.docx";
+            mediaType = MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        }
+
+        return  ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(mediaType)
                 .body(reportData);
 
     }
