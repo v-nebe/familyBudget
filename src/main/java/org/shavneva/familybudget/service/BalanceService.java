@@ -12,7 +12,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class BalanceService {
 
-    CurrencyService currencyService;
+    ConverterService converterService;
 
     public Map<String, Double> calculateBalances(List<Transaction> transactions, String targetCurrency){
         Map<String, Double> balances = new HashMap<>();
@@ -28,27 +28,13 @@ public class BalanceService {
         }
 
         if(targetCurrency != null & balances.containsKey(targetCurrency)){
-            return convertBalances(balances, targetCurrency);
+
+            return converterService.convertBalances(balances, targetCurrency);
         }
+        System.out.println(balances);
 
         return balances;
     }
 
-    public Map<String, Double> convertBalances(Map<String, Double> balances, String targetCurrency){
-        double convertedBalance = 0.0;
-        Map<String, Double> rates = currencyService.getExchangesRates();
 
-        for(Map.Entry<String, Double> entry : balances.entrySet()){
-            String currency = entry.getKey();
-            double amount = entry.getValue();
-
-            if(!currency.equals(targetCurrency)){
-                double rate = rates.getOrDefault(currency + "_" + targetCurrency, 0.1);
-                amount *= rate;
-            }
-            convertedBalance += amount;
-        }
-
-        return Map.of(targetCurrency, convertedBalance);
-    }
 }

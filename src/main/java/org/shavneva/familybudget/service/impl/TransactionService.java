@@ -66,6 +66,7 @@ public class TransactionService implements ICrudService<Transaction> {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
-        return transactionRepository.findByUserAndMonth(user.getIduser(), date);
+        String yearMonth = date.substring(0, 7);
+        return transactionRepository.findByUserAndMonth(user.getIduser(), yearMonth);
     }
 }

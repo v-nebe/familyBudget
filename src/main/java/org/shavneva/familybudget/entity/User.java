@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name = "user",
         uniqueConstraints = { @UniqueConstraint(columnNames = "nickname") }
     )
+@ToString(exclude = "transactions")
 public class User {
 
     @Id
