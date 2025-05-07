@@ -33,12 +33,12 @@ public class ReportsController {
 
         if (acceptHeader.contains("application/pdf")){
             reportData = reportsService.generatePdfReportForUser(nickname, date, currency);
-            filename = "report.xlsx";
+            filename = "report.pdf";
             mediaType = MediaType.APPLICATION_PDF;
 
         } else if (acceptHeader.contains("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
             reportData = reportsService.generateExcelReportForUser(nickname, date, currency);
-            filename = "report.docx";
+            filename = "report.xlsx";
             mediaType = MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
         } else {
