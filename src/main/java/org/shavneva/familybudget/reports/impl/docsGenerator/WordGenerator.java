@@ -1,9 +1,9 @@
-package org.shavneva.familybudget.service.impl;
+package org.shavneva.familybudget.reports.impl.docsGenerator;
 
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.service.ReportGenerator;
+import org.shavneva.familybudget.reports.TypeReportGenerator;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class WordGenerator implements ReportGenerator {
+public class WordGenerator implements TypeReportGenerator {
     @Override
     public byte[] generateReport(List<Transaction> transactions, Map<String, Double> balances) {
         if (transactions.isEmpty()) {

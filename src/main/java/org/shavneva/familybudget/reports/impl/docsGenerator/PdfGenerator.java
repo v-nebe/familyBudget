@@ -1,8 +1,8 @@
-package org.shavneva.familybudget.service.impl;
+package org.shavneva.familybudget.reports.impl.docsGenerator;
 
 import com.itextpdf.text.pdf.BaseFont;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.service.ReportGenerator;
+import org.shavneva.familybudget.reports.TypeReportGenerator;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.*;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PdfGenerator implements ReportGenerator {
+public class PdfGenerator implements TypeReportGenerator {
     @Override
     public byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances) {
         if (transactionList.isEmpty()) {

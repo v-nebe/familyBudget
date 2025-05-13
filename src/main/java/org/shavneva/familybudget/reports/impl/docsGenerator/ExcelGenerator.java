@@ -1,7 +1,7 @@
-package org.shavneva.familybudget.service.impl;
+package org.shavneva.familybudget.reports.impl.docsGenerator;
 
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.service.ReportGenerator;
+import org.shavneva.familybudget.reports.TypeReportGenerator;
 import org.springframework.stereotype.Service;
 
 import org.apache.poi.ss.usermodel.*;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ExcelGenerator implements ReportGenerator {
+public class ExcelGenerator implements TypeReportGenerator {
     @Override
     public byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances) {
         if (transactionList.isEmpty()) {

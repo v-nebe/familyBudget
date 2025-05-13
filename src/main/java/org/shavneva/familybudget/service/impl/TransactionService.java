@@ -7,8 +7,12 @@ import org.shavneva.familybudget.exception.ResourceNotFoundException;
 import org.shavneva.familybudget.repository.TransactionRepository;
 import org.shavneva.familybudget.repository.UserRepository;
 import org.shavneva.familybudget.service.ICrudService;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 @Service
@@ -20,7 +24,19 @@ public class TransactionService implements ICrudService<Transaction> {
 
     @Override
     public Transaction create(Transaction newTransaction) {
-        System.out.println(newTransaction);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByNickname(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        System.out.println(newTransaction.getUser());
+
+        if (newTransaction.getUser().getIduser() != currentUser.getIduser()) {
+            throw new AccessDeniedException("Вы не можете создавать транзакцию для другого пользователя.");
+        }
+        else {
+            newTransaction.setUser(currentUser);
+        }
+
         return transactionRepository.save(newTransaction);
     }
 
@@ -31,16 +47,33 @@ public class TransactionService implements ICrudService<Transaction> {
 
 
     public Transaction getById(int id) {
-        return transactionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id:" + id));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByNickname(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
+
+        if (transaction.getUser().getIduser() != currentUser.getIduser()) {
+            throw new AccessDeniedException("Вы не можете просматривать чужую транзакцию.");
+        }
+
+        return transaction;
     }
 
     @Override
     public Transaction update(Transaction updatedTransaction) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByNickname(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
         Transaction transactionExisting = getById(updatedTransaction.getIdtransaction());
-        if(updatedTransaction.getUser() != null){
-            transactionExisting.setUser(updatedTransaction.getUser());
+
+        if (updatedTransaction.getUser().getIduser() != currentUser.getIduser()) {
+            throw new AccessDeniedException("Вы не можете переназначить свою транзакцию на другого пользователя.");
         }
+
+        transactionExisting.setUser(updatedTransaction.getUser());
         if(updatedTransaction.getCategory() != null){
             transactionExisting.setCategory(updatedTransaction.getCategory());
         }
@@ -59,6 +92,17 @@ public class TransactionService implements ICrudService<Transaction> {
 
     @Override
     public void delete(int id) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByNickname(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Транзакция была не найден с id " + id));
+
+        if (transaction.getUser().getIduser() != currentUser.getIduser()) {
+            throw new AccessDeniedException("Вы не можете удалить чужую транзакцию.");
+        }
+
         transactionRepository.deleteById(id);
     }
 
