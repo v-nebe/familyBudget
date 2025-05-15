@@ -1,8 +1,12 @@
 package org.shavneva.familybudget.reports.impl.docsGenerator;
 
 import com.itextpdf.text.pdf.BaseFont;
+import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.reports.TypeReportGenerator;
+import org.shavneva.familybudget.reports.ReportGenerator;
+import org.shavneva.familybudget.service.BalanceService;
+import org.shavneva.familybudget.service.impl.TransactionService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.*;
@@ -15,15 +19,32 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PdfGenerator implements TypeReportGenerator {
+@AllArgsConstructor
+public class PdfGenerator implements ReportGenerator {
+    private final TransactionService transactionService;
+    private final BalanceService balanceService;
+
     @Override
-    public byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances) {
-        if (transactionList.isEmpty()) {
+    public MediaType getSupportedMediaType() {
+        return MediaType.APPLICATION_PDF;
+    }
+
+    @Override
+    public String getFileExtension() {
+        return "pdf";
+    }
+
+    @Override
+    public byte[] generateReport(String username, String date, String currency) {
+        List<Transaction> transactions = transactionService.getTransactionsByUser(username, date);
+        Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
+
+        if (transactions.isEmpty()) {
             throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
         }
 
         SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
-        String month = monthFormat.format(transactionList.get(0).getDate());
+        String month = monthFormat.format(transactions.get(0).getDate());
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document();
@@ -45,7 +66,7 @@ public class PdfGenerator implements TypeReportGenerator {
             table.addCell(new Phrase("Сумма", headerFont));
             table.addCell(new Phrase("Валюта", headerFont));
 
-            for (Transaction t : transactionList) {
+            for (Transaction t : transactions) {
                 table.addCell(new Phrase(t.getCategory().getCategoryname(), bodyFont));
                 table.addCell(new Phrase(String.valueOf(t.getAmount()), bodyFont));
                 table.addCell(new Phrase(t.getCurrency(), bodyFont));

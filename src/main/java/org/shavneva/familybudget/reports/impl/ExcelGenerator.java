@@ -1,7 +1,11 @@
 package org.shavneva.familybudget.reports.impl.docsGenerator;
 
+import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.reports.TypeReportGenerator;
+import org.shavneva.familybudget.reports.ReportGenerator;
+import org.shavneva.familybudget.service.BalanceService;
+import org.shavneva.familybudget.service.impl.TransactionService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import org.apache.poi.ss.usermodel.*;
@@ -13,15 +17,33 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ExcelGenerator implements TypeReportGenerator {
+@AllArgsConstructor
+public class ExcelGenerator implements ReportGenerator {
+
+    private final TransactionService transactionService;
+    private final BalanceService balanceService;
+
     @Override
-    public byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances) {
-        if (transactionList.isEmpty()) {
+    public MediaType getSupportedMediaType() {
+        return MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
+
+    @Override
+    public String getFileExtension() {
+        return "xlsx";
+    }
+
+    @Override
+    public byte[] generateReport(String username, String date, String currency) {
+        List<Transaction> transactions = transactionService.getTransactionsByUser(username, date);
+        Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
+
+        if (transactions.isEmpty()) {
             throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
         }
 
         SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
-        String month = monthFormat.format(transactionList.get(0).getDate());
+        String month = monthFormat.format(transactions.get(0).getDate());
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Отчет о транзакциях за " + month);
@@ -34,7 +56,7 @@ public class ExcelGenerator implements TypeReportGenerator {
 
             // Data
             int rowIdx = 1;
-            for (Transaction t : transactionList) {
+            for (Transaction t : transactions) {
                 Row row = sheet.createRow(rowIdx++);
                 row.createCell(0).setCellValue(t.getCategory().getCategoryname());
                 row.createCell(1).setCellValue(t.getAmount());
