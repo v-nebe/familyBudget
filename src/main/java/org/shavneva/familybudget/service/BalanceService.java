@@ -31,7 +31,6 @@ public class BalanceService {
 
             return converterService.convertBalances(balances, targetCurrency);
         }
-        System.out.println(balances);
 
         return balances;
     }

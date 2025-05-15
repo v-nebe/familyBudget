@@ -1,4 +1,4 @@
-package org.shavneva.familybudget.reports.impl.docsGenerator;
+package org.shavneva.familybudget.reports.impl;
 
 import com.itextpdf.text.pdf.BaseFont;
 import lombok.AllArgsConstructor;
@@ -35,9 +35,26 @@ public class PdfGenerator implements ReportGenerator {
     }
 
     @Override
-    public byte[] generateReport(String username, String date, String currency) {
+    public Object[] prepareReportData(String username, String date, String currency) {
         List<Transaction> transactions = transactionService.getTransactionsByUser(username, date);
+
+        if (transactions.isEmpty()) {
+            throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
+        }
+
         Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
+        String month = new SimpleDateFormat("yyyy-MM").format(transactions.get(0).getDate());
+
+        return new Object[] { transactions, balances, month };
+    }
+
+    @Override
+    public byte[] generateReport(String username, String date, String currency) {
+        Object[] reportData = prepareReportData(username, date, currency);
+        @SuppressWarnings("unchecked")
+        List<Transaction> transactions = (List<Transaction>) reportData[0];
+        @SuppressWarnings("unchecked")
+        Map<String, Double> balances = (Map<String, Double>) reportData[1];
 
         if (transactions.isEmpty()) {
             throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");

@@ -1,4 +1,4 @@
-package org.shavneva.familybudget.reports.impl.docsGenerator;
+package org.shavneva.familybudget.reports.impl;
 
 import lombok.AllArgsConstructor;
 import org.apache.poi.xwpf.usermodel.*;
@@ -35,17 +35,28 @@ public class WordGenerator implements ReportGenerator {
     }
 
     @Override
-    public byte[] generateReport(String username, String date, String currency) {
+    public Object[] prepareReportData(String username, String date, String currency) {
         List<Transaction> transactions = transactionService.getTransactionsByUser(username, date);
-        Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
 
         if (transactions.isEmpty()) {
             throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
         }
 
-        // Получаем месяц из первой транзакции
-        SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
-        String month = monthFormat.format(transactions.get(0).getDate());
+        Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
+        String month = new SimpleDateFormat("yyyy-MM").format(transactions.get(0).getDate());
+
+        return new Object[] { transactions, balances, month };
+    }
+
+    @Override
+    public byte[] generateReport(String username, String date, String currency) {
+
+        Object[] reportData = prepareReportData(username, date, currency);
+        @SuppressWarnings("unchecked")
+        List<Transaction> transactions = (List<Transaction>) reportData[0];
+        @SuppressWarnings("unchecked")
+        Map<String, Double> balances = (Map<String, Double>) reportData[1];
+        String month = (String) reportData[2];
 
         try (XWPFDocument document = new XWPFDocument();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {

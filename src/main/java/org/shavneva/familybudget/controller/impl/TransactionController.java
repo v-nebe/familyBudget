@@ -11,6 +11,8 @@ import org.shavneva.familybudget.service.ICrudService;
 import org.shavneva.familybudget.service.impl.TransactionService;
 import org.shavneva.familybudget.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +30,7 @@ public class TransactionController extends BaseController<Transaction, Transacti
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() ")
     public TransactionDTO create(TransactionDTO transactionDTO){
         return super.create(transactionDTO);
     }
