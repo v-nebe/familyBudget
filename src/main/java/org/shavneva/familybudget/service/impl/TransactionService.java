@@ -24,7 +24,6 @@ public class TransactionService implements ICrudService<Transaction> {
     private final UserRepository userRepository;
 
     @Override
-    @PreAuthorize("@transactionSecurity.isUserSelf(#newTransaction, authentication)")
     public Transaction create(Transaction newTransaction) {
         return transactionRepository.save(newTransaction);
     }
@@ -41,7 +40,6 @@ public class TransactionService implements ICrudService<Transaction> {
     }
 
     @Override
-    @PreAuthorize("@transactionSecurity.isOwner(#updatedTransaction.idtransaction, authentication)")
     public Transaction update(Transaction updatedTransaction) {
         Transaction transactionExisting = getById(updatedTransaction.getIdtransaction());
 
@@ -67,7 +65,6 @@ public class TransactionService implements ICrudService<Transaction> {
     }
 
     @Override
-    @PreAuthorize("@transactionSecurity.isOwner(#id, authentication)")
     public void delete(int id) {
         transactionRepository.deleteById(id);
     }

@@ -1,6 +1,7 @@
 package org.shavneva.familybudget.security;
 
 import lombok.AllArgsConstructor;
+import org.shavneva.familybudget.dto.TransactionDTO;
 import org.shavneva.familybudget.entity.Transaction;
 import org.shavneva.familybudget.repository.TransactionRepository;
 import org.shavneva.familybudget.repository.UserRepository;
@@ -20,9 +21,9 @@ public class TransactionSecurity {
 
     }
 
-    public boolean isUserSelf(Transaction transaction, Authentication authentication){
+    public boolean isUserSelf(TransactionDTO transactionDTO, Authentication authentication){
         String username = authentication.getName();
-        return  userRepository.findById(transaction.getUser().getIduser())
+        return  userRepository.findById(transactionDTO.getUser().getIduser())
                 .map(user -> user.getNickname().equals(username))
                 .orElse(false);
     }

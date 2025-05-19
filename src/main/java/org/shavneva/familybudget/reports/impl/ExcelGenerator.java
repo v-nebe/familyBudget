@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
-public class ExcelGenerator implements ReportGenerator {
+public class ExcelGenerator extends AbstractReportGenerator{
 
-    private final TransactionService transactionService;
-    private final BalanceService balanceService;
+    protected ExcelGenerator(TransactionService transactionService, BalanceService balanceService) {
+        super(transactionService, balanceService);
+    }
 
     @Override
     public MediaType getSupportedMediaType() {
@@ -34,31 +34,10 @@ public class ExcelGenerator implements ReportGenerator {
     }
 
     @Override
-    public Object[] prepareReportData(String username, String date, String currency) {
-        List<Transaction> transactions = transactionService.getTransactionsByUser(username, date);
-
-        if (transactions.isEmpty()) {
-            throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
-        }
-
-        Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
-        String month = new SimpleDateFormat("yyyy-MM").format(transactions.get(0).getDate());
-
-        return new Object[] { transactions, balances, month };
-    }
-
-    @Override
-    public byte[] generateReport(String username, String date, String currency) {
-
-        Object[] reportData = prepareReportData(username, date, currency);
-        @SuppressWarnings("unchecked")
-        List<Transaction> transactions = (List<Transaction>) reportData[0];
-        @SuppressWarnings("unchecked")
-        Map<String, Double> balances = (Map<String, Double>) reportData[1];
-        String month = (String) reportData[2];
+    public byte[] generateReport(ReportData data) {
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet("Отчет о транзакциях за " + month);
+            Sheet sheet = workbook.createSheet("Отчет о транзакциях за " + data.month());
 
             // Header
             Row header = sheet.createRow(0);
@@ -68,7 +47,7 @@ public class ExcelGenerator implements ReportGenerator {
 
             // Data
             int rowIdx = 1;
-            for (Transaction t : transactions) {
+            for (Transaction t : data.transactions()) {
                 Row row = sheet.createRow(rowIdx++);
                 row.createCell(0).setCellValue(t.getCategory().getCategoryname());
                 row.createCell(1).setCellValue(t.getAmount());
@@ -78,7 +57,7 @@ public class ExcelGenerator implements ReportGenerator {
             // Balances
             Sheet balanceSheet = workbook.createSheet("Конечный баланс");
             int i = 0;
-            for (Map.Entry<String, Double> entry : balances.entrySet()) {
+            for (Map.Entry<String, Double> entry : data.balances().entrySet()) {
                 Row row = balanceSheet.createRow(i++);
                 row.createCell(0).setCellValue(entry.getKey());
                 row.createCell(1).setCellValue(entry.getValue());

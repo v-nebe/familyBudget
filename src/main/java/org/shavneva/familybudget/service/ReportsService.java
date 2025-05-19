@@ -1,9 +1,8 @@
 package org.shavneva.familybudget.service;
 
-import lombok.AllArgsConstructor;
-
 import org.shavneva.familybudget.reports.ReportGenerator;
 import org.shavneva.familybudget.reports.ReportWrapper;
+import org.shavneva.familybudget.reports.impl.AbstractReportGenerator;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +14,17 @@ import java.util.stream.Collectors;
 @Service
 public class ReportsService {
 
-    private final Map<MediaType, ReportGenerator> generatorMap;
+    private final Map<MediaType, AbstractReportGenerator> generatorMap;
 
-    public ReportsService(List<ReportGenerator> generators) {
+    public ReportsService(List<AbstractReportGenerator> generators) {
         this.generatorMap = generators.stream()
                 .collect(Collectors.toMap(ReportGenerator::getSupportedMediaType, Function.identity()));
     }
 
     public ReportWrapper generateReport(String username, String date, String currency, MediaType mediaType) {
-        ReportGenerator reportGenerator = generatorMap.get(mediaType);
-        byte[] data = reportGenerator.generateReport(username, date, currency);
-        return  new ReportWrapper(data, reportGenerator.getFileExtension(), mediaType);
+        AbstractReportGenerator generator = generatorMap.get(mediaType);
+        byte[] fileBytes = generator.prepareReportData(username, date, currency);
+        return new ReportWrapper(fileBytes, generator.getFileExtension(), mediaType);
     }
 
 }

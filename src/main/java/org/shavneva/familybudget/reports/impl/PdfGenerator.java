@@ -19,10 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
-public class PdfGenerator implements ReportGenerator {
-    private final TransactionService transactionService;
-    private final BalanceService balanceService;
+public class PdfGenerator extends AbstractReportGenerator {
+
+
+    protected PdfGenerator(TransactionService transactionService, BalanceService balanceService) {
+        super(transactionService, balanceService);
+    }
 
     @Override
     public MediaType getSupportedMediaType() {
@@ -35,33 +37,7 @@ public class PdfGenerator implements ReportGenerator {
     }
 
     @Override
-    public Object[] prepareReportData(String username, String date, String currency) {
-        List<Transaction> transactions = transactionService.getTransactionsByUser(username, date);
-
-        if (transactions.isEmpty()) {
-            throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
-        }
-
-        Map<String, Double> balances = balanceService.calculateBalances(transactions, currency);
-        String month = new SimpleDateFormat("yyyy-MM").format(transactions.get(0).getDate());
-
-        return new Object[] { transactions, balances, month };
-    }
-
-    @Override
-    public byte[] generateReport(String username, String date, String currency) {
-        Object[] reportData = prepareReportData(username, date, currency);
-        @SuppressWarnings("unchecked")
-        List<Transaction> transactions = (List<Transaction>) reportData[0];
-        @SuppressWarnings("unchecked")
-        Map<String, Double> balances = (Map<String, Double>) reportData[1];
-
-        if (transactions.isEmpty()) {
-            throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
-        }
-
-        SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
-        String month = monthFormat.format(transactions.get(0).getDate());
+    public byte[] generateReport(ReportData data) {
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document();
@@ -74,7 +50,7 @@ public class PdfGenerator implements ReportGenerator {
             Font headerFont = new Font(baseFont, 12, Font.BOLD);
             Font bodyFont = new Font(baseFont, 12, Font.NORMAL);
 
-            document.add(new Paragraph("Отчет о транзакциях за " + month, titleFont));
+            document.add(new Paragraph("Отчет о транзакциях за " + data.month(), titleFont));
             document.add(new Paragraph(" "));
 
             PdfPTable table = new PdfPTable(3);
@@ -83,7 +59,7 @@ public class PdfGenerator implements ReportGenerator {
             table.addCell(new Phrase("Сумма", headerFont));
             table.addCell(new Phrase("Валюта", headerFont));
 
-            for (Transaction t : transactions) {
+            for (Transaction t : data.transactions()) {
                 table.addCell(new Phrase(t.getCategory().getCategoryname(), bodyFont));
                 table.addCell(new Phrase(String.valueOf(t.getAmount()), bodyFont));
                 table.addCell(new Phrase(t.getCurrency(), bodyFont));
@@ -93,7 +69,7 @@ public class PdfGenerator implements ReportGenerator {
             document.add(new Paragraph(" "));
 
             document.add(new Paragraph("Конечный баланс:", headerFont));
-            for (Map.Entry<String, Double> entry : balances.entrySet()) {
+            for (Map.Entry<String, Double> entry : data.balances().entrySet()) {
                 document.add(new Paragraph(entry.getKey() + ": " + entry.getValue(), bodyFont));
             }
 
