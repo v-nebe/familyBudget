@@ -1,19 +1,23 @@
 package org.shavneva.familybudget.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.shavneva.familybudget.entity.Category;
 import org.shavneva.familybudget.exception.ResourceNotFoundException;
 import org.shavneva.familybudget.repository.CategoryRepository;
-import org.shavneva.familybudget.service.ICrudService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-public class CategoryService implements ICrudService<Category> {
+public class CategoryService extends BaseService<Category, Integer> {
 
     private final CategoryRepository categoryRepository;
+
+    @Autowired
+    public CategoryService(CategoryRepository categoryRepository) {
+        super(categoryRepository);
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public Category create(Category category) {

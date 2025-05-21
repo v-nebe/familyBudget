@@ -1,15 +1,11 @@
 package org.shavneva.familybudget.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.shavneva.familybudget.dto.UserDTO;
 import org.shavneva.familybudget.entity.User;
 import org.shavneva.familybudget.exception.ResourceNotFoundException;
-import org.shavneva.familybudget.mapper.impl.UserMapper;
 import org.shavneva.familybudget.repository.UserRepository;
-import org.shavneva.familybudget.service.ICrudService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,10 +13,15 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
-public class UserService implements ICrudService<User> {
+public class UserService extends BaseService<User, Integer> {
 
     private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        super(userRepository);
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User create(User user) {

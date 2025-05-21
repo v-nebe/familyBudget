@@ -16,7 +16,7 @@ import java.util.Date;
 @Setter
 @Table(name = "transaction")
 @ToString(exclude = {"user", "category"})
-public class Transaction{
+public class Transaction extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

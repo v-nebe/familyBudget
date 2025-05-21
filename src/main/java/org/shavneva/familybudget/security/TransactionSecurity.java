@@ -2,7 +2,6 @@ package org.shavneva.familybudget.security;
 
 import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.dto.TransactionDTO;
-import org.shavneva.familybudget.entity.Transaction;
 import org.shavneva.familybudget.repository.TransactionRepository;
 import org.shavneva.familybudget.repository.UserRepository;
 import org.springframework.security.core.Authentication;

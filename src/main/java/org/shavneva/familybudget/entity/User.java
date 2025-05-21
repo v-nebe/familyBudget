@@ -20,7 +20,7 @@ import java.util.List;
         uniqueConstraints = { @UniqueConstraint(columnNames = "nickname") }
     )
 @ToString(exclude = "transactions")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

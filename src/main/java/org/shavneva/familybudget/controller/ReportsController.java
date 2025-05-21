@@ -1,10 +1,8 @@
 package org.shavneva.familybudget.controller;
 
 import lombok.AllArgsConstructor;
-import org.shavneva.familybudget.entity.Transaction;
 import org.shavneva.familybudget.reports.ReportWrapper;
 import org.shavneva.familybudget.service.ReportsService;
-import org.shavneva.familybudget.service.impl.TransactionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

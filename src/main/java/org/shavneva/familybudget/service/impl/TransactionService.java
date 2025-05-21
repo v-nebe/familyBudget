@@ -1,27 +1,29 @@
 package org.shavneva.familybudget.service.impl;
 
-import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.Transaction;
 import org.shavneva.familybudget.entity.User;
 import org.shavneva.familybudget.exception.ResourceNotFoundException;
 import org.shavneva.familybudget.repository.TransactionRepository;
 import org.shavneva.familybudget.repository.UserRepository;
-import org.shavneva.familybudget.service.ICrudService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
-public class TransactionService implements ICrudService<Transaction> {
+public class TransactionService extends BaseService<Transaction, Integer> {
 
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
+
+    @Autowired
+    public TransactionService(TransactionRepository transactionRepository, UserRepository userRepository) {
+        super(transactionRepository);
+        this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Transaction create(Transaction newTransaction) {
