@@ -1,6 +1,7 @@
-package org.shavneva.familybudget.service;
+package org.shavneva.familybudget.service.impl;
 
 import org.json.JSONObject;
+import org.shavneva.familybudget.service.ICurrencyService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -8,9 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CurrencyService {
+public class CurrencyService implements ICurrencyService {
     private final String API_URL = "https://api.nbrb.by/exrates/rates/";
 
+    @Override
     public Map<String, Double> getExchangesRates(String... currencies) {
         RestTemplate restTemplate = new RestTemplate();
         Map<String, Double> rates = new HashMap<>();

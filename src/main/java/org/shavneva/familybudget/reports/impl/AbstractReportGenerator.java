@@ -2,7 +2,7 @@ package org.shavneva.familybudget.reports.impl;
 
 import org.shavneva.familybudget.entity.Transaction;
 import org.shavneva.familybudget.reports.ReportGenerator;
-import org.shavneva.familybudget.service.BalanceService;
+import org.shavneva.familybudget.service.impl.BalanceService;
 import org.shavneva.familybudget.service.impl.TransactionService;
 
 

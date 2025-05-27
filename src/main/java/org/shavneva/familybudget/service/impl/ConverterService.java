@@ -1,15 +1,17 @@
-package org.shavneva.familybudget.service;
+package org.shavneva.familybudget.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.shavneva.familybudget.service.IConverterService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class ConverterService {
+public class ConverterService implements IConverterService {
     CurrencyService currencyService;
 
+    @Override
     public Map<String, Double> convertBalances(Map<String, Double> balances, String targetCurrency) {
         double convertedBalance = 0.0;
         Map<String, Double> rates = currencyService.getExchangesRates("USD", "EUR");
