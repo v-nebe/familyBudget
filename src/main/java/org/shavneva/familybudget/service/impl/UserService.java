@@ -19,28 +19,19 @@ public class UserService extends BaseService<User, Integer> {
 
     @Autowired
     public UserService(UserRepository userRepository) {
-        super(userRepository);
+        super(userRepository, "User");
         this.userRepository = userRepository;
     }
 
     @Override
     public User create(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public List<User> read() {
-        return userRepository.findAll();
-    }
-
-    public User getById(int id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        return super.create(user);
     }
 
     @Override
     public User update(User updatedUser) {
-        User existingUser = getById(updatedUser.getIduser());
+        User existingUser = userRepository.findById(updatedUser.getIduser())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + updatedUser.getId()));
 
         if (updatedUser.getNickname() != null && !updatedUser.getNickname().isEmpty()) {
             existingUser.setNickname(updatedUser.getNickname());
@@ -75,7 +66,7 @@ public class UserService extends BaseService<User, Integer> {
 
     @Override
     public void delete(int id) {
-        userRepository.deleteById(id);
+        super.delete(id);
     }
 
 

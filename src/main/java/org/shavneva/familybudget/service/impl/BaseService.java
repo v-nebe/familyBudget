@@ -13,9 +13,11 @@ import java.util.List;
 public class BaseService <T extends BaseEntity, ID> implements ICrudService<T> {
 
     private final JpaRepository<T, Integer> repository;
+    private final String entityName;
 
-    public BaseService(JpaRepository<T, Integer> repository) {
+    public BaseService(JpaRepository<T, Integer> repository, String entityName) {
         this.repository = repository;
+        this.entityName = entityName;
     }
 
     public T create(T newE) {
@@ -29,14 +31,14 @@ public class BaseService <T extends BaseEntity, ID> implements ICrudService<T> {
     public T update(T newE) {
         int id = newE.getId();
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Entity with id " + id + " not found");
+            throw new ResourceNotFoundException(entityName + " with id " + id + " not found");
         }
         return repository.save(newE);
     }
 
     public void delete(int id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Entity with id " + id + " not found");
+            throw new ResourceNotFoundException(entityName + " with id " + id + " not found");
         }
         repository.deleteById(id);
     }

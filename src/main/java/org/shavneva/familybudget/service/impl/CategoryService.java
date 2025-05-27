@@ -15,7 +15,7 @@ public class CategoryService extends BaseService<Category, Integer> {
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {
-        super(categoryRepository);
+        super(categoryRepository, "Category");
         this.categoryRepository = categoryRepository;
     }
 
@@ -24,22 +24,14 @@ public class CategoryService extends BaseService<Category, Integer> {
         if (categoryRepository.existsByCategoryname(category.getCategoryname())) {
             throw new IllegalArgumentException("Категория с таким названием уже существует: " + category.getCategoryname());
         }
-        return categoryRepository.save(category);
+        return super.create(category);
     }
 
-    @Override
-    public List<Category> read() {
-        return categoryRepository.findAll();
-    }
-
-    public Category getById(int id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Категория не найдена с id: " + id));
-    }
 
     @Override
     public Category update(Category updatedCategory) {
-        Category existingCategory = getById(updatedCategory.getIdcategory());
+        Category existingCategory = categoryRepository.findById(updatedCategory.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Категория не найдена с id: " + updatedCategory.getId()));
 
         if (updatedCategory.getCategoryname() != null && !updatedCategory.getCategoryname().isEmpty()) {
             existingCategory.setCategoryname(updatedCategory.getCategoryname());
@@ -53,6 +45,6 @@ public class CategoryService extends BaseService<Category, Integer> {
 
     @Override
     public void delete(int id) {
-        categoryRepository.deleteById(id);
+        super.delete(id);
     }
 }

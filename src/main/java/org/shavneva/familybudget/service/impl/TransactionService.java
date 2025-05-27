@@ -20,30 +20,20 @@ public class TransactionService extends BaseService<Transaction, Integer> {
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository, UserRepository userRepository) {
-        super(transactionRepository);
+        super(transactionRepository, "Transaction");
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
     }
 
     @Override
     public Transaction create(Transaction newTransaction) {
-        return transactionRepository.save(newTransaction);
-    }
-
-    @Override
-    public List<Transaction> read() {
-        return transactionRepository.findAll();
-    }
-
-    @PreAuthorize("@transactionSecurity.isOwner(#id, authentication)")
-    public Transaction getById(int id) {
-        return transactionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
+        return super.create(newTransaction);
     }
 
     @Override
     public Transaction update(Transaction updatedTransaction) {
-        Transaction transactionExisting = getById(updatedTransaction.getIdtransaction());
+        Transaction transactionExisting = transactionRepository.findById(updatedTransaction.getIdtransaction())
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + updatedTransaction.getIdtransaction()));
 
         if (updatedTransaction.getUser() != null &&
                 updatedTransaction.getUser().getIduser() != transactionExisting.getUser().getIduser()) {
@@ -68,7 +58,7 @@ public class TransactionService extends BaseService<Transaction, Integer> {
 
     @Override
     public void delete(int id) {
-        transactionRepository.deleteById(id);
+        super.delete(id);
     }
 
 
