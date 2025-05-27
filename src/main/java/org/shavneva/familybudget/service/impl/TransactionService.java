@@ -33,15 +33,10 @@ public class TransactionService implements ICrudService<Transaction> {
         return transactionRepository.findAll();
     }
 
-    @PreAuthorize("@transactionSecurity.isOwner(#id, authentication)")
-    public Transaction getById(int id) {
-        return transactionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
-    }
-
     @Override
     public Transaction update(Transaction updatedTransaction) {
-        Transaction transactionExisting = getById(updatedTransaction.getIdtransaction());
+        Transaction transactionExisting = transactionRepository.findById(updatedTransaction.getIdtransaction())
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + updatedTransaction.getIdtransaction()));
 
         if (updatedTransaction.getUser() != null &&
                 updatedTransaction.getUser().getIduser() != transactionExisting.getUser().getIduser()) {

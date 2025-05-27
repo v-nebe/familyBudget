@@ -1,6 +1,6 @@
 package org.shavneva.familybudget.service;
 
-import org.shavneva.familybudget.reports.ReportGenerator;
+import org.shavneva.familybudget.reports.ReportFormat;
 import org.shavneva.familybudget.reports.ReportWrapper;
 import org.shavneva.familybudget.reports.impl.AbstractReportGenerator;
 import org.springframework.http.MediaType;
@@ -18,7 +18,7 @@ public class ReportsService {
 
     public ReportsService(List<AbstractReportGenerator> generators) {
         this.generatorMap = generators.stream()
-                .collect(Collectors.toMap(ReportGenerator::getSupportedMediaType, Function.identity()));
+                .collect(Collectors.toMap(ReportFormat::getSupportedMediaType, Function.identity()));
     }
 
     public ReportWrapper generateReport(String username, String date, String currency, MediaType mediaType) {

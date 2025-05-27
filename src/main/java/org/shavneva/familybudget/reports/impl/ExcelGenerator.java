@@ -1,8 +1,6 @@
 package org.shavneva.familybudget.reports.impl;
 
-import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.reports.ReportGenerator;
 import org.shavneva.familybudget.service.BalanceService;
 import org.shavneva.familybudget.service.impl.TransactionService;
 import org.springframework.http.MediaType;
@@ -12,12 +10,10 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class ExcelGenerator extends AbstractReportGenerator{
+public class ExcelGenerator extends AbstractReportGenerator {
 
     protected ExcelGenerator(TransactionService transactionService, BalanceService balanceService) {
         super(transactionService, balanceService);
