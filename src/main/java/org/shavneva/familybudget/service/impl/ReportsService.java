@@ -1,6 +1,6 @@
 package org.shavneva.familybudget.service.impl;
 
-import org.shavneva.familybudget.reports.ReportGenerator;
+import org.shavneva.familybudget.reports.ReportFormat;
 import org.shavneva.familybudget.reports.ReportWrapper;
 import org.shavneva.familybudget.reports.impl.AbstractReportGenerator;
 import org.shavneva.familybudget.service.IReportsService;
@@ -19,7 +19,7 @@ public class ReportsService implements IReportsService {
 
     public ReportsService(List<AbstractReportGenerator> generators) {
         this.generatorMap = generators.stream()
-                .collect(Collectors.toMap(ReportGenerator::getSupportedMediaType, Function.identity()));
+                .collect(Collectors.toMap(ReportFormat::getSupportedMediaType, Function.identity()));
     }
 
     @Override

@@ -31,6 +31,11 @@ public class TransactionService extends BaseService<Transaction, Integer> {
     }
 
     @Override
+    public List<Transaction> read() {
+        return transactionRepository.findAll();
+    }
+
+    @Override
     public Transaction update(Transaction updatedTransaction) {
         Transaction transactionExisting = transactionRepository.findById(updatedTransaction.getIdtransaction())
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + updatedTransaction.getIdtransaction()));

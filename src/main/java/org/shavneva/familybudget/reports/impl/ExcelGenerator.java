@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 @Service
-public class ExcelGenerator extends AbstractReportGenerator{
+public class ExcelGenerator extends AbstractReportGenerator {
 
     protected ExcelGenerator(TransactionService transactionService, BalanceService balanceService) {
         super(transactionService, balanceService);

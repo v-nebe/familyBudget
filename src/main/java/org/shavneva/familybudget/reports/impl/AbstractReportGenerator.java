@@ -1,8 +1,8 @@
 package org.shavneva.familybudget.reports.impl;
 
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.reports.ReportGenerator;
 import org.shavneva.familybudget.service.impl.BalanceService;
+import org.shavneva.familybudget.reports.ReportFormat;
 import org.shavneva.familybudget.service.impl.TransactionService;
 
 
@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractReportGenerator implements ReportGenerator {
+public abstract class AbstractReportGenerator implements ReportFormat {
     protected final TransactionService transactionService;
     protected final BalanceService balanceService;
 
