@@ -1,4 +1,4 @@
-package org.shavneva.familybudget.service;
+package org.shavneva.familybudget.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.CustomUserDetails;

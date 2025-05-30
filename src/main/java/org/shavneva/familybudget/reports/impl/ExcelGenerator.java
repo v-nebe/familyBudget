@@ -1,30 +1,39 @@
-package org.shavneva.familybudget.service.impl;
+package org.shavneva.familybudget.reports.impl;
 
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.service.ReportGenerator;
+import org.shavneva.familybudget.service.impl.BalanceService;
+import org.shavneva.familybudget.service.impl.TransactionService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class ExcelGenerator implements ReportGenerator {
-    @Override
-    public byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances) {
-        if (transactionList.isEmpty()) {
-            throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
-        }
+public class ExcelGenerator extends AbstractReportGenerator {
 
-        SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
-        String month = monthFormat.format(transactionList.get(0).getDate());
+    protected ExcelGenerator(TransactionService transactionService, BalanceService balanceService) {
+        super(transactionService, balanceService);
+    }
+
+    @Override
+    public MediaType getSupportedMediaType() {
+        return MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
+
+    @Override
+    public String getFileExtension() {
+        return "xlsx";
+    }
+
+    @Override
+    public byte[] generateReport(ReportData data) {
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet("Отчет о транзакциях за " + month);
+            Sheet sheet = workbook.createSheet("Отчет о транзакциях за " + data.month());
 
             // Header
             Row header = sheet.createRow(0);
@@ -34,7 +43,7 @@ public class ExcelGenerator implements ReportGenerator {
 
             // Data
             int rowIdx = 1;
-            for (Transaction t : transactionList) {
+            for (Transaction t : data.transactions()) {
                 Row row = sheet.createRow(rowIdx++);
                 row.createCell(0).setCellValue(t.getCategory().getCategoryname());
                 row.createCell(1).setCellValue(t.getAmount());
@@ -44,7 +53,7 @@ public class ExcelGenerator implements ReportGenerator {
             // Balances
             Sheet balanceSheet = workbook.createSheet("Конечный баланс");
             int i = 0;
-            for (Map.Entry<String, Double> entry : balances.entrySet()) {
+            for (Map.Entry<String, Double> entry : data.balances().entrySet()) {
                 Row row = balanceSheet.createRow(i++);
                 row.createCell(0).setCellValue(entry.getKey());
                 row.createCell(1).setCellValue(entry.getValue());

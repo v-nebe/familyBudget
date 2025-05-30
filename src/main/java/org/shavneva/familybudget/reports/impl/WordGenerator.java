@@ -1,29 +1,38 @@
-package org.shavneva.familybudget.service.impl;
+package org.shavneva.familybudget.reports.impl;
 
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.service.ReportGenerator;
+import org.shavneva.familybudget.service.impl.BalanceService;
+import org.shavneva.familybudget.service.impl.TransactionService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class WordGenerator implements ReportGenerator {
-    @Override
-    public byte[] generateReport(List<Transaction> transactions, Map<String, Double> balances) {
-        if (transactions.isEmpty()) {
-            throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
-        }
 
-        // Получаем месяц из первой транзакции
-        SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
-        String month = monthFormat.format(transactions.get(0).getDate());
+public class WordGenerator extends AbstractReportGenerator {
+
+    protected WordGenerator(TransactionService transactionService, BalanceService balanceService) {
+        super(transactionService, balanceService);
+    }
+
+    @Override
+    public MediaType getSupportedMediaType() {
+        return MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+    }
+
+    @Override
+    public String getFileExtension() {
+        return "docx";
+    }
+
+    @Override
+    protected byte[] generateReport(ReportData data) {
 
         try (XWPFDocument document = new XWPFDocument();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -32,7 +41,7 @@ public class WordGenerator implements ReportGenerator {
             XWPFParagraph title = document.createParagraph();
             title.setAlignment(ParagraphAlignment.CENTER);
             XWPFRun titleRun = title.createRun();
-            titleRun.setText("Отчет о транзакциях за " + month);
+            titleRun.setText("Отчет о транзакциях за " + data.month());
             titleRun.setFontFamily("Times New Roman");
             titleRun.setBold(true);
             titleRun.setFontSize(20);
@@ -52,7 +61,7 @@ public class WordGenerator implements ReportGenerator {
             setCellText(headerRow.addNewTableCell(), "Валюта", 14, "Times New Roman");
 
             // Заполняем таблицу транзакциями
-            for (Transaction transaction : transactions) {
+            for (Transaction transaction : data.transactions()) {
                 XWPFTableRow row = table.createRow();
                 setCellText(row.getCell(0), transaction.getCategory().getCategoryname(), 13, "Times New Roman");
                 setCellText(row.getCell(1), String.valueOf(transaction.getAmount()), 13, "Times New Roman");
@@ -76,7 +85,7 @@ public class WordGenerator implements ReportGenerator {
                 }
             }
 
-            for (Map.Entry<String, Double> entry : balances.entrySet()) {
+            for (Map.Entry<String, Double> entry : data.balances().entrySet()) {
                 XWPFTableRow balanceRow = table.createRow();
                 setCellText(balanceRow.getCell(0), "Конечный баланс", 13, "Times New Roman");
                 setCellText(balanceRow.getCell(1), String.valueOf(entry.getValue()), 13, "Times New Roman"); // Сумма

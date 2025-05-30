@@ -16,7 +16,7 @@ import java.util.Date;
 @Setter
 @Table(name = "transaction")
 @ToString(exclude = {"user", "category"})
-public class Transaction{
+public class Transaction extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +43,10 @@ public class Transaction{
     public Transaction(String currency, String amount) {
         this.currency = currency;
         this.amount = amount;
+    }
+
+    @Override
+    public Integer getId() {
+        return idtransaction;
     }
 }

@@ -1,8 +1,10 @@
-package org.shavneva.familybudget.service.impl;
+package org.shavneva.familybudget.reports.impl;
 
 import com.itextpdf.text.pdf.BaseFont;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.service.ReportGenerator;
+import org.shavneva.familybudget.service.impl.BalanceService;
+import org.shavneva.familybudget.service.impl.TransactionService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.*;
@@ -10,20 +12,28 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class PdfGenerator implements ReportGenerator {
-    @Override
-    public byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances) {
-        if (transactionList.isEmpty()) {
-            throw new IllegalArgumentException("Список транзакций пуст, невозможно создать отчет.");
-        }
+public class PdfGenerator extends AbstractReportGenerator {
 
-        SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
-        String month = monthFormat.format(transactionList.get(0).getDate());
+
+    protected PdfGenerator(TransactionService transactionService, BalanceService balanceService) {
+        super(transactionService, balanceService);
+    }
+
+    @Override
+    public MediaType getSupportedMediaType() {
+        return MediaType.APPLICATION_PDF;
+    }
+
+    @Override
+    public String getFileExtension() {
+        return "pdf";
+    }
+
+    @Override
+    public byte[] generateReport(ReportData data) {
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document();
@@ -36,7 +46,7 @@ public class PdfGenerator implements ReportGenerator {
             Font headerFont = new Font(baseFont, 12, Font.BOLD);
             Font bodyFont = new Font(baseFont, 12, Font.NORMAL);
 
-            document.add(new Paragraph("Отчет о транзакциях за " + month, titleFont));
+            document.add(new Paragraph("Отчет о транзакциях за " + data.month(), titleFont));
             document.add(new Paragraph(" "));
 
             PdfPTable table = new PdfPTable(3);
@@ -45,7 +55,7 @@ public class PdfGenerator implements ReportGenerator {
             table.addCell(new Phrase("Сумма", headerFont));
             table.addCell(new Phrase("Валюта", headerFont));
 
-            for (Transaction t : transactionList) {
+            for (Transaction t : data.transactions()) {
                 table.addCell(new Phrase(t.getCategory().getCategoryname(), bodyFont));
                 table.addCell(new Phrase(String.valueOf(t.getAmount()), bodyFont));
                 table.addCell(new Phrase(t.getCurrency(), bodyFont));
@@ -55,7 +65,7 @@ public class PdfGenerator implements ReportGenerator {
             document.add(new Paragraph(" "));
 
             document.add(new Paragraph("Конечный баланс:", headerFont));
-            for (Map.Entry<String, Double> entry : balances.entrySet()) {
+            for (Map.Entry<String, Double> entry : data.balances().entrySet()) {
                 document.add(new Paragraph(entry.getKey() + ": " + entry.getValue(), bodyFont));
             }
 

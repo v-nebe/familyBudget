@@ -28,7 +28,7 @@ public class TransactionMapper implements IMapper<Transaction, TransactionDTO> {
             return null;
         }
         TransactionDTO transactionDTO = new TransactionDTO();
-        transactionDTO.setIdtransaction(entity.getIdtransaction());
+        transactionDTO.setIdtransaction(entity.getId());
         transactionDTO.setCurrency(entity.getCurrency());
         transactionDTO.setAmount(entity.getAmount());
         transactionDTO.setDate(entity.getDate());

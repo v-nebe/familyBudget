@@ -5,6 +5,6 @@ import org.shavneva.familybudget.entity.Transaction;
 import java.util.List;
 import java.util.Map;
 
-public interface ReportGenerator {
-    byte[] generateReport(List<Transaction> transactionList, Map<String, Double> balances);
+public interface IBalanceService {
+    Map<String, Double> calculateBalances(List<Transaction> transactions, String targetCurrency);
 }

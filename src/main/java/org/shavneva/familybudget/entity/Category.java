@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "category",
         uniqueConstraints = { @UniqueConstraint(columnNames = "categoryname") }
     )
-public class Category{
+public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idcategory")
@@ -31,5 +31,10 @@ public class Category{
     @Override
     public String toString() {
         return categoryname;
+    }
+
+    @Override
+    public Integer getId() {
+        return idcategory;
     }
 }
