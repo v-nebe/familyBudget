@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.service.BalanceService;
-import org.shavneva.familybudget.service.CurrencyService;
+import org.shavneva.familybudget.service.impl.BalanceService;
+import org.shavneva.familybudget.service.impl.CurrencyService;
 
 import java.util.List;
 import java.util.Map;

@@ -7,7 +7,6 @@ import org.shavneva.familybudget.dto.*;
 import org.shavneva.familybudget.entity.*;
 import org.shavneva.familybudget.service.ICrudService;
 import org.shavneva.familybudget.service.impl.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;

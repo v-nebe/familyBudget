@@ -17,13 +17,13 @@ databaseChangeLog:
                   name: nickname
                   type: varchar(100)
                   constraints:
-                    unique: true
+                    unique: false
                     nullable: false
               - column:
                   name: password
                   type: varchar(100)
                   constraints:
-                    unique: true
+                    unique: false
                     nullable: false
               - column:
                   name: role

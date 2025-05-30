@@ -5,7 +5,6 @@ import org.shavneva.familybudget.entity.Category;
 import org.shavneva.familybudget.mapper.impl.CategoryMapper;
 import org.shavneva.familybudget.service.impl.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

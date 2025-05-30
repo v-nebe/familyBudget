@@ -1,20 +1,10 @@
 package org.shavneva.familybudget.controller.impl;
 
-import lombok.AllArgsConstructor;
-import org.shavneva.familybudget.dto.CategoryDTO;
 import org.shavneva.familybudget.dto.TransactionDTO;
-import org.shavneva.familybudget.dto.UserDTO;
+
 import org.shavneva.familybudget.entity.Transaction;
-import org.shavneva.familybudget.entity.User;
-import org.shavneva.familybudget.mapper.IMapper;
 import org.shavneva.familybudget.mapper.impl.TransactionMapper;
-import org.shavneva.familybudget.service.ICrudService;
 import org.shavneva.familybudget.service.impl.TransactionService;
-import org.shavneva.familybudget.service.impl.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

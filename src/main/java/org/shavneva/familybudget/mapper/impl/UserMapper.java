@@ -15,7 +15,7 @@ public class UserMapper implements IMapper<User, UserDTO> {
             return null;
         }
         UserDTO userDTO = new UserDTO();
-        userDTO.setIduser(entity.getIduser());
+        userDTO.setIduser(entity.getId());
         userDTO.setNickname(entity.getNickname());
         userDTO.setPassword(entity.getPassword());
         userDTO.setRole(entity.getRole());

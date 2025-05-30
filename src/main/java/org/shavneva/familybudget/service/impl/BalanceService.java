@@ -1,7 +1,8 @@
-package org.shavneva.familybudget.service;
+package org.shavneva.familybudget.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.shavneva.familybudget.entity.Transaction;
+import org.shavneva.familybudget.service.IBalanceService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -10,10 +11,11 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class BalanceService {
+public class BalanceService implements IBalanceService {
 
     ConverterService converterService;
 
+    @Override
     public Map<String, Double> calculateBalances(List<Transaction> transactions, String targetCurrency){
         Map<String, Double> balances = new HashMap<>();
         balances.put("BYN", 0.0);

@@ -1,7 +1,7 @@
 package org.shavneva.familybudget.config;
 
 
-import org.shavneva.familybudget.service.CustomUserDetailsService;
+import org.shavneva.familybudget.service.impl.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
