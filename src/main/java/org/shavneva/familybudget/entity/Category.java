@@ -32,4 +32,9 @@ public class Category extends BaseEntity{
     public String toString() {
         return categoryname;
     }
+
+    @Override
+    public Integer getId() {
+        return idcategory;
+    }
 }

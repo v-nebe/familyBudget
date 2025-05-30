@@ -44,4 +44,9 @@ public class Transaction extends BaseEntity{
         this.currency = currency;
         this.amount = amount;
     }
+
+    @Override
+    public Integer getId() {
+        return idtransaction;
+    }
 }

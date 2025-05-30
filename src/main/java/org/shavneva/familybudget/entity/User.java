@@ -33,6 +33,11 @@ public class User extends BaseEntity {
     @Column(name = "role", nullable = false)
     private String role;
 
+    @Override
+    public Integer getId(){
+        return iduser;
+    }
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 }
